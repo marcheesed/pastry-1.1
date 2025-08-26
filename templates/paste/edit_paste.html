@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Paste {{ paste.token }}{% endblock %}
+
+{% block base_content %}
+
+<div class="edit-paste-container flex flex-column">  
+  <form method="POST" action="{{ edit_paste_url }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+
+    <div class="tab-buttons">
+      <button class="tab-button tab-button--active" type="button" data-tab="edit">Code</button>
+      <button class="tab-button" type="button" data-tab="full-preview">Full Preview</button>
+    </div>
+    
+    <div class="tab-content flex flex-column" id="edit-tab">
+      <div class="grid-container flex-grid flex-gap">
+          <div class="editor-html">
+            <textarea name="content" id="edit-textarea" required {% if not can_edit %}readonly{% endif %}>{{ paste.content | default(value="") }}</textarea>
+          </div>
+          <div class="editor-css">
+            <textarea name="css" id="edit-cssarea" {% if not can_edit %}readonly{% endif %}>{{ css | default(value="") }}</textarea>
+          </div>
+        <div class="live-edit-preview container-base" id="edit-preview"></div>
+      </div>
+        
+        {% if can_edit %}
+        <div class="flex flex-row">
+        <div id="meta-section" style="display: none;">
+          <div class="meta-inputs flex flex-column flex-gap">
+            <div class="flex flex-row flex-gap">
+            <div class="flex flex-column flex-gap">
+            <label for="page_title">Page Title</label>
+            <input
+              type="text"
+              id="page_title"
+              name="page_title"
+              class="text-input"
+              value="{{ page_title | default(value='') }}"
+              placeholder="Title of the page"
+            />
+            </div>
+
+            <div class="flex flex-column flex-gap">
+            <label for="favicon_url">Favicon URL</label>
+            <input
+              type="text"
+              id="favicon_url"
+              name="favicon_url"
+              class="text-input"
+              value="{{ favicon_url | default(value='') }}"
+              placeholder="https://example.com/favicon.webp"
+            />
+            </div>
+            </div>
+
+            <div class="flex flex-row flex-gap">
+            <div class="flex flex-column flex-gap">
+            <label for="embed_color">Embed Color (Hex)</label>
+            <input
+              type="text"
+              id="embed_color"
+              name="embed_color"
+              class="text-input"
+              value="{{ embed_color | default(value='') }}"
+              placeholder="#FF0000"
+              pattern="#[0-9A-Fa-f]{6}"
+              title="Enter a valid hex color (e.g., #FF0000)"
+            />
+            </div>
+
+          <div class="flex flex-column flex-gap">
+          <label for="embed_image_url">Embed Image URL</label>
+          <input
+            type="text"
+            id="embed_image_url"
+            name="embed_image_url"
+            class="text-input"
+            value="{{ embed_image_url | default(value='') }}"
+            placeholder="https://example.com/image.webp"
+          />
+          </div>
+
+          <div class="flex flex-column flex-gap flex-1">
+           <label for="embed_description">Embed Description</label>
+            <textarea
+              id="embed_description"
+              name="embed_description"
+              class="text-input"
+              rows="3"
+              placeholder="Description for embedding/preview"
+            >{{ embed_description | default(value="") }}</textarea>
+            </div>
+          </div>
+          </div>
+
+          {% if is_main_owner or is_admin %}
+          <div class="flex flex-row flex-gap">
+            <div class="flex flex-column flex-gap">
+            <label for="collaborators_usernames">Collaborators</label>
+            <input
+              type="text"
+              id="collaborators_usernames"
+              name="collaborators_usernames"
+              class="text-input"
+              placeholder="user1, user2, user3"
+              value="{{ collaborators_usernames | default(value='') }}"
+            />
+            </div>
+            <div class="flex flex-column flex-gap">
+            <label for="new_owner_username">Change Owner</label>
+            <input
+              type="text"
+              id="new_owner_username"
+              name="new_owner_username"
+              class="text-input"
+              placeholder="user"
+            />
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        </div>
+
+        <div class="flex flex-justify-between">
+          <div class="flex flex-align-center flex-justify-start flex-gap">
+            <button type="submit" class="button" name="action" value="save">Save</button>
+            <a href="/{{ paste.token }}" class="button">Cancel</a>
+            <button type="button" id="toggle-meta" class="button">+</button>
+          </div>
+          {% if is_main_owner or is_admin %}
+          <button
+            type="submit"
+            class="button delete"
+            name="action"
+            value="delete"
+            onclick="return confirm('Are you sure you want to delete this paste?');">
+            Delete
+          </button>
+          {% endif %}
+        </div>
+        {% else %}
+        <p>You do not have permission to edit this paste.</p>
+        {% endif %}
+  </div>
+
+    <div class="tab-content" id="full-preview-tab" style="display: none;">
+      <div class="full-preview-container">
+        <iframe
+          id="full-preview-iframe"
+          title="Full preview of paste content"
+        ></iframe>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

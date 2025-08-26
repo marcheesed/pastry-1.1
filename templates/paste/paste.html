@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block main_class %}paste-main{% endblock %}
+
+{% block title %}{{ page_title | default(value=paste.token) }}{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/raw/{{ paste.token }}/css">
+{% block favicon %}
+  {% if favicon_url %}
+  <link rel="icon" href="{{ favicon_url }}">
+  {% else %}
+  <link rel="icon" href="/static/images/favicon.svg" />
+  {% endif %}
+{% endblock %}
+{% if embed_description %}
+<meta name="description" content="{{ embed_description }}">
+{% else %}
+<meta name="description" content="Paste found on pastry.diy!">
+{% endif %}
+{% if embed_image_url %}
+<meta property="og:image" content="{{ embed_image_url }}">
+{% endif %}
+{% if embed_color %}
+<meta name="theme-color" content="{{ embed_color }}">
+{% else %}
+<meta name="theme-color" content="#fce49c">
+{% endif %}
+{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div class="paste-container flex flex-column flex-gap">
+  <div class="text-container container-base">{{ paste.content | safe }}</div>
+  <div class="flex flex-align-start flex-justify-between">
+    <a href="{{ edit_paste_url }}" class="button edit">Edit</a>
+    <div class="paste-info">
+      <span class="publish-timestamp">
+        Pub: {{ timestamp }}<br>
+      </span>
+      <span class="edit-timestamp">
+        Edit: {{ edit_timestamp }}<br>
+      </span>
+      <span class="owner-info">
+        Owner: <a href="{{ owner_profile_url }}">{{ owner_username }}</a><br>
+      </span>
+      <span class="views-count">
+        Views: {{ views }}<br>
+      </span>
+    </div>
+  </div>
+</div>
+{% endblock %}

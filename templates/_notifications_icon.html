@@ -1,0 +1,24 @@
+<div class="dropdown" id="notificationsDropdown" style="position: relative; width: auto;">
+  <button id="notifications-toggle" aria-label="Toggle notifications"
+      aria-haspopup="listbox" aria-expanded="false"
+      style="background:none; border:none; cursor:pointer; position: relative;">
+    <svg id="icon-bell-unread" width="22" height="22" viewBox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9z" stroke="currentColor" stroke-width="2"
+      stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2"/>
+      <circle cx="18" cy="6" r="6" fill="#fa5252"
+      stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <svg id="icon-bell-read" width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9z" stroke="currentColor" stroke-width="2"
+        stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2"
+        stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <div class="options" id="notificationsList" role="listbox" aria-label="Notifications list">
+    <div data-value="" aria-disabled="true">
+      Loading notifications...
+    </div>
+  </div>
+</div>

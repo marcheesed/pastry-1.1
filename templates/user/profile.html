@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ username }}{% endblock %}
+
+{% block head_extra %}
+  <meta property="og:image" content="{{ profile_picture_url }}" />
+  <meta property="og:title" content="{{ display_name | default(value=username) }}'s profile" />
+  <meta property="og:description" content="Profile found on pastry.diy!" />
+  <meta name="theme-color" content="#fce49c" />
+{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div class="profile-container flex flex-row flex-gap">
+  <div class="profile flex flex-column flex-gap">
+    <div class="picture-id-section flex flex-row flex-gap">
+      <div class="help2 flex flex-column flex-gap">
+        {% if profile_picture_url %}
+          <img src="{{ profile_picture_url }}" alt="{{ display_name | default(value=username) }}'s profile picture" class="profile-picture"/>
+        {% else %}
+          <img src="/static/images/default_profile_picture.webp" alt="Default profile picture" class="profile-picture"/>
+        {% endif %}
+        
+        {% if is_own_profile %}
+          <a href="?edit=true" class="button full-width">Edit Profile</a>
+        {% endif %}
+        {% if not is_own_profile and current_user %}
+          {% if is_friend %}
+            <form action="/friend/remove/{{ username }}" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="submit" value="Unfriend" class="button">
+            </form>
+          {% else %}
+            <form action="/friend/add/{{ username }}" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="submit" value="Add Friend" class="button">
+            </form>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="id-section flex flex-column flex-justify-start flex-gap">
+        <h1>{{ display_name | default(value=username) }}</h1>
+        <h2>@{{ username }}</h2>
+        {% if badges %}
+        <div class="badges">
+          {% for badge in badges %}
+            <span class="badge badge-{{ badge }}" title="{{ badge | capitalize }}">
+              {% if badge == "staff" %}
+                {% include "partials/_staff_icon.html" %}
+              {% elif badge == "donator" %}
+                {% include "partials/_donator_icon.html" %}
+              {% elif badge == "tester" %}
+                {% include "partials/_tester_icon.html" %}
+              {% elif badge == "contributor" %}
+                {% include "partials/_contributor_icon.html" %}
+              {% elif badge == "red_flag" %}
+                {% include "partials/_red_flag_icon.html" %}
+              {% endif %}
+            </span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="profile-bio-section flex-grow-1">
+      {% if bio %}
+        <p>{{ bio | safe }}</p>
+      {% else %}
+        <p>No bio available.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="friends-section flex flex-column flex-gap">
+    <h2>{{ display_name | default(value=username) }}'s friends</h2>
+    <div class="friends-grid">
+      {% if friends %}
+        {% for friend in friends %}
+          <div class="friend-card">
+            {% if friend.profile_picture_url %}
+              <img src="{{ friend.profile_picture_url }}" alt="{{ friend.username }}'s profile picture" class="friend-picture"/>
+            {% else %}
+              <img src="/static/images/default_profile_picture.webp" alt="Default profile picture" class="friend-picture"/>
+            {% endif %}
+            <h3><a href="/profile/{{ friend.username }}">{{ friend.username }}</a></h3>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No friends yet.</p>
+      {% endif %}
+    </div>
+    <div class="flex flex-align-center flex-justify-between">
+      {% set prev_page = current_page - 1 %}
+      {% set next_page = current_page + 1 %}
+      
+      {% if prev_page >= 1 %}
+        <a href="{% if prev_page == 1 %}?{% else %}?page={{ prev_page }}{% endif %}" class="button">Back</a>
+      {% else %}
+        <a class="button disabled" aria-disabled="true">Back</a>
+      {% endif %}
+      
+      {% if next_page <= total_pages %}
+        <a href="?page={{ next_page }}" class="button">Next</a>
+      {% else %}
+        <a class="button disabled" aria-disabled="true">Next</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

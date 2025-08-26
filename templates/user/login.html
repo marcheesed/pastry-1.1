@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Login - {{ site_name }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div class="auth-container flex flex-justify-center flex-align-center">
+    <div class="auth-image">
+        <img src="/static/images/register.webp" alt="Pastry-chan">
+    </div>
+
+    <div class="auth-form-wrapper">
+        <h1>Login</h1>
+        <form method="POST" action="{{ login_url }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <p>
+                <label for="username">Username</label><br>
+                <input class="text-input text-input--accent" type="text" id="username" name="username" value='{{ username | default(value="") }}'><br>
+            </p>
+
+            <p>
+                <label for="user_token">Secret Token</label><br>
+                <input class="text-input text-input--accent" type="text" id="user_token" name="user_token""><br>
+                {% if error %}
+                    <span class="error-message">{{ error }}</span><br>
+                {% endif %}
+            </p>
+
+            <p><input class="button button--accent" type="submit" value="Login"></p>
+        </form>
+    </div>
+</div>
+{% endblock %}

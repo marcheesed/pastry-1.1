@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site_name }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div class="paste-container flex flex-column flex-gap">
+  <form method="POST" action="{{ save_paste_url }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+
+    <button type="button" class="tab-button tab-button--active" data-tab="text">Text</button>
+
+    <div class="flex flex-column flex-gap flex-1">
+      <textarea class="tab-container container-base" name="content" required>{{ paste | default(value="") }}</textarea>
+      <div class="flex flex-align-center flex-justify-between flex-gap">
+        <button type="submit" class="button">Publish</button>
+        <input class="text-input" type="text" name="custom_token" placeholder="Custom URL" />
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

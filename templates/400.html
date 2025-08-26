@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}400 Bad Request - {{ site_name }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div style="width: 700px; text-align: center;">
+    <img src="/static/images/403.webp" alt="400 Bad Request" style="max-width: 100%; height: auto;" />
+    <p style="font-size: 1.2em;">
+        {{ error }}
+        <br>
+        <a href="{{ dashboard_url }}">Go to your dashboard</a> or <a href="{{ paste_form_url }}">create a new paste</a>.
+    </p>
+</div>
+{% endblock %}

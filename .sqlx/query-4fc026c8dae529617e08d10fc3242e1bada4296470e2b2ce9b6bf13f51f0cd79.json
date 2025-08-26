@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO notifications (user_id, notification_type, related_user_id, message)\n           VALUES ($1, 'friend_remove', $2, $3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4fc026c8dae529617e08d10fc3242e1bada4296470e2b2ce9b6bf13f51f0cd79"
+}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User Management - {{ site_name }}{% endblock %}
+
+{% block head_extra %}
+<style>
+.action-form { display: inline-block; margin-right: 8px; }
+</style>
+{% endblock %}
+
+{% block main_class %}admin-content{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<h1>User Management</h1>
+
+<table class="user-table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Badges</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>
+                <a href="/profile/{{ user.0 }}">{{ user.0 }}</a>
+            </td>
+            <td>{{ user.2 }}</td>
+            <td>
+                {% if user.1 %}
+                Banned
+                {% else %}
+                Active
+                {% endif %}
+            </td>
+            <td>
+                {% for badge in user.3 %}
+                <span class="badge badge-{{ badge }}">
+                    {% if badge == "staff" %}
+                     {% include "partials/_staff_icon.html" %}
+                    {% elif badge == "donator" %}
+                      {% include "partials/_donator_icon.html" %}
+                    {% elif badge == "tester" %}
+                       {% include "partials/_tester_icon.html" %}
+                    {% elif badge == "contributor" %}
+                       {% include "partials/_contributor_icon.html" %}
+                    {% elif badge == "red_flag" %}
+                        {% include "partials/_red_flag_icon.html" %}
+                    {% endif %}
+                </span>
+                {% endfor %}
+            </td>
+            <td>
+                {% if user.1 %}
+                <form action="/admin/unban" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="username" value="{{ user.0 }}">
+                    <button type="submit" class="button">Unban</button>
+                </form>
+                {% else %}
+                <form action="/admin/ban" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="username" value="{{ user.0 }}">
+                    <button type="submit" class="button">Ban</button>
+                </form>
+                {% endif %}
+                <form action="/admin/delete_profile/{{ user.0 }}" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="username" value="{{ user.0 }}">
+                    <button type="submit" class="button delete"
+                            onclick="return confirm('Are you sure you want to delete the profile for {{ user.0 }}? This action cannot be undone.')">
+                        Delete
+                    </button>
+                </form>
+                {% for badge in ["staff", "donator", "tester", "contributor", "red_flag"] %}
+                {% if badge in user.3 %}
+                <form action="/profile/{{ user.0 }}/badge/{{ badge }}/remove" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="button">Remove {{ badge | capitalize }} Badge</button>
+                </form>
+                {% else %}
+                <form action="/profile/{{ user.0 }}/badge/{{ badge }}/assign" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="button">Assign {{ badge | capitalize }} Badge</button>
+                </form>
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <nav class="pagination">
+  {% if current_page > 1 %}
+    <a href="?page={{ current_page - 1 }}" class="button">Previous</a>
+  {% else %}
+    <span class="disabled button">Previous</span>
+  {% endif %}
+
+  <span>Page {{ current_page }} of {{ total_pages }}</span>
+
+  {% if current_page < total_pages %}
+    <a href="?page={{ current_page + 1 }}" class="button">Next</a>
+  {% else %}
+    <span class="disabled button">Next</span>
+  {% endif %}
+</nav>
+</table>
+{% endblock %}

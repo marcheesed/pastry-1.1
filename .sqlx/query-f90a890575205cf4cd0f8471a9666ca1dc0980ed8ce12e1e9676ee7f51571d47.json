@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO friend_requests (sender_id, receiver_id, status, created_at)\n             VALUES ($1, $2, 'pending', NOW())",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f90a890575205cf4cd0f8471a9666ca1dc0980ed8ce12e1e9676ee7f51571d47"
+}

@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            n.notification_id, \n            n.user_id, \n            n.notification_type, \n            n.related_user_id,\n            u.username as \"related_username?\",\n            n.message, \n            n.is_read, \n            n.created_at\n        FROM notifications n\n        LEFT JOIN users u ON n.related_user_id = u.user_id\n        LEFT JOIN friend_requests fr ON n.related_user_id = fr.sender_id \n            AND n.user_id = fr.receiver_id \n            AND fr.status = 'pending'\n            AND n.notification_type = 'friend_request'\n        WHERE n.user_id = $1 \n            AND (n.notification_type != 'friend_request' OR fr.request_id IS NOT NULL)\n        ORDER BY n.created_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "notification_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "notification_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "related_user_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "related_username?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "message",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "is_read",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "160eb34ca2d7d5ec1e2b1d44cb27f4eecb8f98a0fcd72f68d813751b6dffae42"
+}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - {{ username }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div class="flex flex-column flex-gap">
+<div class="profile-edit-container">
+  <form action="/profile/{{ username }}/edit" method="POST" class="flex flex-column flex-gap">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <div class="form-group flex flex-row flex-gap">
+      <div class="flex flex-column flex-gap flex-1">
+        <div class="flex flex-column flex-gap">
+          <label for="username">Username</label>
+          <input class="text-input" type="text" id="username" type="hidden" name="username" value="{{ username }}" />
+          {% if errors.username %}
+            <ul class="error-messages">
+              {% for error in errors.username %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="flex flex-column flex-gap">
+          <label for="display_name">Display Name</label>
+          <input class="text-input" type="text" id="display_name" name="display_name" placeholder="Display Name" value="{{ display_name | default(value='') }}" />
+          {% if errors.display_name %}
+            <ul class="error-messages">
+              {% for error in errors.display_name %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="flex flex-column flex-gap">
+          <label for="profile_picture_url">Profile Picture URL</label>
+          <input class="text-input" type="url" id="profile_picture_url" name="profile_picture_url" placeholder="Profile picture URL" value="{{ profile_picture_url | default(value='') }}" />
+        </div>
+      </div>
+      <div class="flex flex-align-center">
+        {% if profile_picture_url %}
+          <img src="{{ profile_picture_url }}" alt="Profile picture preview" class="profile-picture"/>
+        {% else %}
+          <img src="/static/images/default_profile_picture.webp" alt="Default profile" class="profile-picture"/>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group flex flex-column flex-gap">
+      <label for="bio">Bio</label>
+      <textarea id="bio" name="bio" rows="8" maxlength="1000" placeholder="Bio">{{ bio | default(value="") }}</textarea>
+    </div>
+    <div class="flex flex-align-center flex-justify-between">
+      <button type="submit" name="action" value="save" class="button save">Save Changes</button>
+      <button type="submit" name="action" value="delete" class="button delete"
+        onclick="return confirm('Are you sure you want to delete your profile? This action cannot be undone.')">
+        Delete Profile</button>
+    </div>
+  </form>
+  <form action="/profile/{{ username }}/refresh-token" method="POST" class="flex flex-column flex-gap">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit" class="button"
+    onclick="return confirm('Are you sure you want to refresh your token? This action cannot be undone.')">
+    Refresh Secret Token</button>
+  </form>
+</div>
+{% endblock %}

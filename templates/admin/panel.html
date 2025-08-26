@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - {{ site_name }}{% endblock %}
+
+{% block main_class %}admin-content{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<h1>Admin Panel</h1>
+
+<div class="admin-links">
+    <p><a href="/admin/pastes" class="button">Manage Pastes</a></p>
+    <p><a href="/admin/users" class="button">Manage Users</a></p>
+</div>
+
+{% endblock %}

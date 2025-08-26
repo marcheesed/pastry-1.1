@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}403 Forbidden - {{ site_name }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div style="width: 700px; text-align: center;">
+    <img src="/static/images/403.webp" alt="403 Forbidden" style="max-width: 100%; height: auto;" />
+    <p style="font-size: 1.2em;">
+        You don't have permission to access this page or resource.
+        <br>
+        {% if is_logged_in %}
+            <a href="{{ dashboard_url }}">Go to your dashboard</a> or <a href="{{ paste_form_url }}">create a new paste</a>.
+        {% else %}
+            Please <a href="{{ login_url }}">log in</a> or <a href="{{ register_url }}">register</a> to access this resource.
+        {% endif %}
+    </p>
+</div>
+{% endblock %}

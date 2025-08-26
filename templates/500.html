@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}500 Internal Server Error - {{ site_name }}{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<div style="width: 700px; text-align: center;">
+    <img src="/static/images/404.webp" alt="500 Internal Server Error" style="max-width: 100%; height: auto;" />
+    <p style="font-size: 1.2em;">
+        Something went wrong on our end. Please try again later.
+        <br>
+        <a href="{{ paste_form_url }}">Create a new paste</a> or <a href="{{ dashboard_url }}">visit your dashboard</a>.
+    </p>
+</div>
+{% endblock %}

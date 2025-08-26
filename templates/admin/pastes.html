@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Paste Management - {{ site_name }}{% endblock %}
+
+{% block head_extra %}
+<style>
+.action-form { display: inline-block; margin-right: 8px; }
+</style>
+{% endblock %}
+
+{% block main_class %}admin-content{% endblock %}
+
+{% block base_content %}
+{{ super() }}
+
+<h1>Paste Management</h1>
+
+<table class="paste-table">
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>Owner</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paste in pastes %}
+        <tr>
+            <td>
+                <a href="/{{ paste.token }}">{{ paste.token }}</a>
+            </td>
+            <td>
+                <a href="/profile/{{ paste.owner_username }}">{{ paste.owner_username }}</a>
+            </td>
+            <td>
+                <form action="/admin/pastes/{{ paste.token }}/delete" method="POST" class="action-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="button delete"
+                            onclick="return confirm('Are you sure you want to delete the paste {{ paste.token }}? This action cannot be undone.')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <nav class="pagination">
+  {% if current_page > 1 %}
+    <a href="?page={{ current_page - 1 }}" class="button">Previous</a>
+  {% else %}
+    <span class="button disabled">Previous</span>
+  {% endif %}
+
+  <span>Page {{ current_page }} of {{ total_pages }}</span>
+
+  {% if current_page < total_pages %}
+    <a href="?page={{ current_page + 1 }}" class="button">Next</a>
+  {% else %}
+    <span class="button disabled">Next</span>
+  {% endif %}
+</nav>
+</table>
+{% endblock %}

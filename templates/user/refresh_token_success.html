@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Secret Token Refreshed{% endblock %}
+
+{% block base_content %}
+<div class="flex flex-column flex-justify-center flex-align-center">
+  <p>Your secret token has been successfully refreshed. Please save the following token securely now, as you won't be able to view it again:</p>
+  <pre class="token">{{ new_user_token }}</pre>
+  <p><a href="/profile/{{ current_user.username }}">Back to profile</a></p>
+</div>
+{% endblock %}

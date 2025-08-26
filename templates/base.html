@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script>
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch(e) {}
+  })();
+</script>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        img-src 'self' data: https://file.garden https://files.catbox.moe https://*.neocities.org https://i.postimg.cc  https://i.ibb.co;
+        media-src 'self' https://file.garden https://files.catbox.moe https://*.neocities.org;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://file.garden https://files.catbox.moe https://*.neocities.org https://cdn.jsdelivr.net https://esm.sh;
+        script-src 'self' 'unsafe-inline' https://file.garden https://files.catbox.moe https://*.neocities.org https://cdn.jsdelivr.net https://esm.sh;
+        connect-src 'self';
+        font-src 'self' https://fonts.gstatic.com https://file.garden https://files.catbox.moe https://*.neocities.org;
+        object-src 'none';
+        frame-src 'none';
+        upgrade-insecure-requests;
+    " />
+
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#fce49c" />
+
+    {% block favicon %}
+    <link rel="icon" href="/static/images/favicon.svg" />
+    {% endblock %}
+    
+    {% block head %}{% endblock %}
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/theme/ayu-mirage.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/theme/base16-light.css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/xml/xml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>
+
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/user.css" />
+
+    <script type="module" src="/static/js/theme.js"></script>
+    <script type="module" src="/static/js/edit.js"></script>
+    <script type="module" src="/static/js/notifications.js"></script>
+    <script type="module" src="/static/js/main.js"></script>
+
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+  <header class="site-header">
+  <div class="flex flex-row flex-justify-between flex-align-center">
+    {% include "_theme_toggle.html" %}
+    {% if current_user is defined %}
+      <div class="flex flex-row flex-align-center flex-gap">
+        {% include "_notifications_icon.html" %}
+        <p> Logged in as
+            <a href="{{ user_profile_url }}">
+                {{ current_user.username }}
+                {% if current_user.profile_picture_url %}
+                    <img src="{{ current_user.profile_picture_url }}" alt="Profile picture" style="height: 1.5em; width: 1.5em; border-radius: 10%; vertical-align: middle;">
+                {% endif %}
+            </a>
+        </p>
+      </div>
+    {% else %}
+      <p>Welcome, guest!</p>
+    {% endif %}
+  </div>
+</header>
+
+  <main class="{% block main_class %}flex flex-justify-center flex-align-center flex-grow-1{% endblock %}">
+    {% block base_content %}
+    <div id="flash-container" class="flash-container">
+    {% if flash_messages %}
+      {% for msg in flash_messages %}
+        <div class="flash-message flash-{{ msg.level }}">
+          {{ msg.message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+    {% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <hr class="footer-line" />
+      <a href="{{ paste_form_url }}">new</a> · <a href="{{ info_url }}">info</a> ·
+      {% if is_logged_in %}
+      <a href="{{ dashboard_url}} ">dashboard</a> · 
+        {% if is_admin %} 
+          <a href="{{ admin_url }}">admin</a> ·
+        {% endif %}
+      <a href="{{ logout_url }}">logout</a>
+      {% else %}
+      <a href="{{ login_url }}">login</a> · <a href="{{ register_url }}">register</a>
+      {% endif %}   
+    </a>
+  </footer>
+</body>
+</html>
+

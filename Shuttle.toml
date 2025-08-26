@@ -1,0 +1,13 @@
+[build]
+assets = [
+  "static/*",
+  "templates/*",
+  "migrations/*"
+]
+
+[deploy]
+include = [
+  "static/*",
+  "templates/*",
+  "migrations/*"
+]
