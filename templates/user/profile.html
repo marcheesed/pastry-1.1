@@ -79,14 +79,14 @@
     <div class="friends-grid">
       {% if friends %}
         {% for friend in friends %}
-          <div class="friend-card">
+          <a href="/profile/{{ friend.username }}" class="friend-card">
             {% if friend.profile_picture_url %}
               <img src="{{ friend.profile_picture_url }}" alt="{{ friend.username }}'s profile picture" class="friend-picture"/>
             {% else %}
               <img src="/static/images/default_profile_picture.webp" alt="Default profile picture" class="friend-picture"/>
             {% endif %}
-            <h3><a href="/profile/{{ friend.username }}">{{ friend.username }}</a></h3>
-          </div>
+            <h3>{{ friend.username }}</h3>
+          </a>
         {% endfor %}
       {% else %}
         <p>No friends yet.</p>

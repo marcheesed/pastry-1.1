@@ -70,9 +70,9 @@
     {% if current_user is defined %}
       <div class="flex flex-row flex-align-center flex-gap">
         {% include "_notifications_icon.html" %}
-        <p> Logged in as
-            <a href="{{ user_profile_url }}">
-                {{ current_user.username }}
+        <p>
+            <a href="{{ user_profile_url }}" class="flex flex-row flex-align-center flex-gap">
+                <span>{{ current_user.username }}</span>
                 {% if current_user.profile_picture_url %}
                     <img src="{{ current_user.profile_picture_url }}" alt="Profile picture" style="height: 1.5em; width: 1.5em; border-radius: 10%; vertical-align: middle;">
                 {% endif %}
